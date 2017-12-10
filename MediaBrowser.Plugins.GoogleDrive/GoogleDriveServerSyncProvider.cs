@@ -17,15 +17,25 @@ namespace MediaBrowser.Plugins.GoogleDrive
 {
     public class GoogleDriveServerSyncProvider : IServerSyncProvider, IHasDynamicAccess, IRemoteSyncProvider
     {
-        private readonly IConfigurationRetriever _configurationRetriever;
-        private readonly IGoogleDriveService _googleDriveService;
+        private IConfigurationRetriever _configurationRetriever
+        {
+            get
+            {
+                return Plugin.Instance.ConfigurationRetriever;
+            }
+        }
+        private IGoogleDriveService _googleDriveService
+        {
+            get
+            {
+                return Plugin.Instance.GoogleDriveService;
+            }
+        }
         private readonly ILogger _logger;
         private readonly IHttpClient _httpClient;
 
-        public GoogleDriveServerSyncProvider(IConfigurationRetriever configurationRetriever, IGoogleDriveService googleDriveService, ILogManager logManager, IHttpClient httpClient)
+        public GoogleDriveServerSyncProvider(ILogManager logManager, IHttpClient httpClient)
         {
-            _configurationRetriever = configurationRetriever;
-            _googleDriveService = googleDriveService;
             _httpClient = httpClient;
             _logger = logManager.GetLogger("GoogleDrive");
         }

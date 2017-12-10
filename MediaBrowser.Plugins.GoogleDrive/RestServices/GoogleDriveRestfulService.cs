@@ -14,15 +14,26 @@ namespace MediaBrowser.Plugins.GoogleDrive.RestServices
     [Authenticated]
     public class GoogleDriveRestfulService2 : IService
     {
-        private readonly IConfigurationRetriever _configurationRetriever;
-        private readonly IGoogleAuthService _googleAuthService;
-        private readonly IGoogleDriveService _googleDriveService;
-
-        public GoogleDriveRestfulService2(IConfigurationRetriever configurationRetriever, IGoogleAuthService googleAuthService, IGoogleDriveService googleDriveService)
+        private IConfigurationRetriever _configurationRetriever
         {
-            _configurationRetriever = configurationRetriever;
-            _googleAuthService = googleAuthService;
-            _googleDriveService = googleDriveService;
+            get
+            {
+                return Plugin.Instance.ConfigurationRetriever;
+            }
+        }
+        private IGoogleAuthService _googleAuthService
+        {
+            get
+            {
+                return Plugin.Instance.GoogleAuthService;
+            }
+        }
+        private IGoogleDriveService _googleDriveService
+        {
+            get
+            {
+                return Plugin.Instance.GoogleDriveService;
+            }
         }
 
         public void Delete(DeleteSyncTarget request)
