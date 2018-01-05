@@ -1143,7 +1143,10 @@ namespace Newtonsoft.Json.Serialization
             IValueProvider valueProvider;
 
 #if !(PORTABLE40 || PORTABLE || NETFX_CORE)
-            valueProvider = new ExpressionValueProvider(member);
+            if (DynamicCodeGeneration)
+                valueProvider = new DynamicValueProvider(member);
+            else
+                valueProvider = new ReflectionValueProvider(member);
 #elif !(PORTABLE40)
             valueProvider = new ExpressionValueProvider(member);
 #else

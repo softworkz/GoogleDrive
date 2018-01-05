@@ -6,8 +6,6 @@ using MediaBrowser.Common.Plugins;
 using MediaBrowser.Model.Plugins;
 using MediaBrowser.Model.Serialization;
 using MediaBrowser.Plugins.GoogleDrive.Configuration;
-using MediaBrowser.Common.Net;
-using MediaBrowser.Common;
 
 namespace MediaBrowser.Plugins.GoogleDrive
 {
@@ -15,15 +13,10 @@ namespace MediaBrowser.Plugins.GoogleDrive
     {
         public static Plugin Instance { get; private set; }
 
-        public IConfigurationRetriever ConfigurationRetriever = new ConfigurationRetriever();
-        public IGoogleAuthService GoogleAuthService;
-        public IGoogleDriveService GoogleDriveService = new GoogleDriveService();
-
-        public Plugin(IApplicationPaths applicationPaths, IXmlSerializer xmlSerializer, IHttpClient httpClient, IJsonSerializer jsonSerializer, IApplicationHost appHost)
+        public Plugin(IApplicationPaths applicationPaths, IXmlSerializer xmlSerializer)
             : base(applicationPaths, xmlSerializer)
         {
             Instance = this;
-            GoogleAuthService = new GoogleAuthService(httpClient, jsonSerializer, appHost);
         }
 
         public IEnumerable<PluginPageInfo> GetPages()
@@ -46,12 +39,6 @@ namespace MediaBrowser.Plugins.GoogleDrive
         public override string Description
         {
             get { return Constants.Description; }
-        }
-
-        private Guid _id = new Guid("b2ff6a63-303a-4a84-b937-6e12f87e3eb9");
-        public override Guid Id
-        {
-            get { return _id; }
         }
     }
 }

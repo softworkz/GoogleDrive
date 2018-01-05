@@ -17,20 +17,8 @@ namespace MediaBrowser.Plugins.GoogleDrive
 {
     public class GoogleDriveServerSyncProvider : IServerSyncProvider, IHasDynamicAccess, IRemoteSyncProvider
     {
-        private IConfigurationRetriever _configurationRetriever
-        {
-            get
-            {
-                return Plugin.Instance.ConfigurationRetriever;
-            }
-        }
-        private IGoogleDriveService _googleDriveService
-        {
-            get
-            {
-                return Plugin.Instance.GoogleDriveService;
-            }
-        }
+        private readonly IConfigurationRetriever _configurationRetriever = new ConfigurationRetriever();
+        private readonly IGoogleDriveService _googleDriveService = new GoogleDriveService();
         private readonly ILogger _logger;
         private readonly IHttpClient _httpClient;
 

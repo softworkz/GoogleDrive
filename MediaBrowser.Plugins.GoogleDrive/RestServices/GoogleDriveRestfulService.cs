@@ -8,32 +8,22 @@ using MediaBrowser.Controller.Net;
 using MediaBrowser.Model.Net;
 using MediaBrowser.Model.Services;
 using MediaBrowser.Plugins.GoogleDrive.Configuration;
+using MediaBrowser.Model.Serialization;
+using MediaBrowser.Common.Net;
+using MediaBrowser.Common;
 
 namespace MediaBrowser.Plugins.GoogleDrive.RestServices
 {
     [Authenticated]
     public class GoogleDriveRestfulService2 : IService
     {
-        private IConfigurationRetriever _configurationRetriever
+        private readonly IConfigurationRetriever _configurationRetriever = new ConfigurationRetriever();
+        private readonly IGoogleAuthService _googleAuthService;
+        private readonly IGoogleDriveService _googleDriveService = new GoogleDriveService();
+
+        public GoogleDriveRestfulService2(IHttpClient httpClient, IJsonSerializer json, IApplicationHost appHost)
         {
-            get
-            {
-                return Plugin.Instance.ConfigurationRetriever;
-            }
-        }
-        private IGoogleAuthService _googleAuthService
-        {
-            get
-            {
-                return Plugin.Instance.GoogleAuthService;
-            }
-        }
-        private IGoogleDriveService _googleDriveService
-        {
-            get
-            {
-                return Plugin.Instance.GoogleDriveService;
-            }
+            _googleAuthService = new GoogleAuthService(httpClient, json, appHost);
         }
 
         public void Delete(DeleteSyncTarget request)
