@@ -60,15 +60,15 @@ namespace MediaBrowser.Plugins.GoogleDrive
             return _configurationRetriever.GetUserSyncAccounts(userId).Select(CreateSyncTarget).ToList();
         }
 
-        public async Task<SyncedFileInfo> SendFile(Stream stream, string[] pathParts, SyncTarget target, IProgress<double> progress, CancellationToken cancellationToken)
+        public async Task<SyncedFileInfo> SendFile(SyncJob syncJob, string originalMediaPath, Stream inputStream, bool isMedia, string[] outputPathParts, SyncTarget target, IProgress<double> progress, CancellationToken cancellationToken)
         {
-            _logger.Debug("Sending file {0} to {1}", string.Join("/", pathParts), target.Name);
+            _logger.Debug("Sending file {0} to {1}", string.Join("/", outputPathParts), target.Name);
 
             var syncAccount = _configurationRetriever.GetSyncAccount(target.Id);
 
             var googleCredentials = GetGoogleCredentials(target);
 
-            var file = await _googleDriveService.UploadFile(stream, pathParts, syncAccount.FolderId, googleCredentials, progress, cancellationToken);
+            var file = await _googleDriveService.UploadFile(inputStream, outputPathParts, syncAccount.FolderId, googleCredentials, progress, cancellationToken);
 
             return new SyncedFileInfo
             {
