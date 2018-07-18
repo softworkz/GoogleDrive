@@ -16,6 +16,7 @@ limitations under the License.
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -543,8 +544,16 @@ namespace Google.Apis.Upload
             else if (response.StatusCode == (HttpStatusCode)308)
             {
                 // The upload protocol uses 308 to indicate that there is more data expected from the server.
-                BytesServerReceived = GetNextByte(response.Headers.GetValues("Range").First());
-                Logger.Debug("MediaUpload[{0}] - {1} Bytes were sent successfully", UploadUri, BytesServerReceived);
+                IEnumerable<string> rangeValues;
+
+                var rangeHEaderValues = response.Headers
+                    .Where(q => string.Equals(q.Key, "Range", StringComparison.OrdinalIgnoreCase)).Select(e => e.Value).FirstOrDefault();
+                if (rangeHEaderValues != null && rangeHEaderValues.Count() > 0)
+                {
+                    BytesServerReceived = GetNextByte(rangeHEaderValues.First());
+                    Logger.Debug("MediaUpload[{0}] - {1} Bytes were sent successfully", UploadUri, BytesServerReceived);
+                }
+
                 return false;
             }
 

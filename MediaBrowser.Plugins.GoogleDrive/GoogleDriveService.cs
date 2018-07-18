@@ -54,18 +54,12 @@ namespace MediaBrowser.Plugins.GoogleDrive
 
             if (pathParts != null && pathParts.Length > 0)
             {
-                var name = pathParts.Last();
-                pathParts = pathParts.Take(pathParts.Length - 1).ToArray();
-
                 try
                 {
-                    var parentId = await FindOrCreateParent(driveService, false, pathParts, rootFolderId, cancellationToken)
+                    var parentId = await FindOrCreateParent(driveService, pathParts, rootFolderId, cancellationToken)
                                 .ConfigureAwait(false);
 
-                    var file = await FindFileId(name, parentId, driveService, cancellationToken).ConfigureAwait(false);
-
-                    result.TotalRecordCount = 1;
-                    result.Items = new[] { file }.Select(GetFileMetadata).ToArray();
+                    result = await this.GetFilesInFolder(parentId, googleCredentials, driveService, cancellationToken);
                 }
                 catch (FileNotFoundException)
                 {
@@ -108,7 +102,7 @@ namespace MediaBrowser.Plugins.GoogleDrive
             };
         }
 
-        private async Task<string> FindOrCreateParent(DriveService driveService, bool enableCreate, string[] pathParts, string rootParentId, CancellationToken cancellationToken)
+        private async Task<string> FindOrCreateParent(DriveService driveService, string[] pathParts, string rootParentId, CancellationToken cancellationToken)
         {
             string currentparentId = rootParentId;
 
@@ -128,7 +122,7 @@ namespace MediaBrowser.Plugins.GoogleDrive
             var fullDriveService = CreateDriveServiceAndCredentials(googleCredentials);
             var driveService = fullDriveService.Item1;
 
-            var parentId = await FindOrCreateParent(driveService, true, pathParts, folderId, cancellationToken);
+            var parentId = await FindOrCreateParent(driveService, pathParts, folderId, cancellationToken);
             await TryDeleteFile(parentId, name, driveService, cancellationToken);
 
             var googleDriveFile = CreateGoogleDriveFile(pathParts, name, folderId);
@@ -244,6 +238,30 @@ namespace MediaBrowser.Plugins.GoogleDrive
 
             return file;
         }
+
+        public async Task<QueryResult<FileSystemMetadata>> GetFilesInFolder(string folderId, GoogleCredentials googleCredentials,
+             DriveService driveService, CancellationToken cancellationToken)
+        {
+            if (string.IsNullOrWhiteSpace(folderId))
+            {
+                throw new ArgumentNullException(nameof(folderId));
+            }
+
+            var query = string.Format("'{0}' in parents", folderId);
+
+            var matchingFiles = await GetFiles(query, driveService, cancellationToken);
+
+            var result = new QueryResult<FileSystemMetadata>();
+
+            if (matchingFiles != null)
+            {
+                result.Items = matchingFiles.Select(GetFileMetadata).ToArray();
+                result.TotalRecordCount = result.Items.Length;
+            }
+
+            return result;
+        }
+
 
         private async Task<List<File>> GetFiles(string query, DriveService driveService, CancellationToken cancellationToken)
         {
