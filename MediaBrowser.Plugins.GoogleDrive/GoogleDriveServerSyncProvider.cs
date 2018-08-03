@@ -99,11 +99,21 @@ namespace MediaBrowser.Plugins.GoogleDrive
             };
         }
 
-        public Task DeleteFile(string id, SyncTarget target, CancellationToken cancellationToken)
+        public async Task<bool> DeleteFile(SyncJob syncJob, string path, SyncTarget target, CancellationToken cancellationToken)
         {
             var googleCredentials = GetGoogleCredentials(target);
 
-            return _googleDriveService.DeleteFile(id, googleCredentials, cancellationToken);
+            try
+            {
+                await _googleDriveService.DeleteFile(path, googleCredentials, cancellationToken);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.ErrorException("GoogleDriveSyncProvider: Error deleting file {0}", ex, path);
+            }
+
+            return false;
         }
 
         public async Task<Stream> GetFile(string id, SyncTarget target, IProgress<double> progress, CancellationToken cancellationToken)
