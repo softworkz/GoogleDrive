@@ -205,10 +205,10 @@ namespace MediaBrowser.Plugins.GoogleDrive
             await request.ExecuteAsync(cancellationToken);
         }
 
-        public async Task<File> GetFile(string fileId, DriveService driveService, CancellationToken cancellationToken)
+        public Task<File> GetFile(string fileId, DriveService driveService, CancellationToken cancellationToken)
         {
             var request = driveService.Files.Get(fileId);
-            return await request.ExecuteAsync(cancellationToken);
+            return request.ExecuteAsync(cancellationToken);
         }
 
         public async Task<File> FindFileId(string name, string parentFolderId, DriveService driveService, CancellationToken cancellationToken)
@@ -355,14 +355,14 @@ namespace MediaBrowser.Plugins.GoogleDrive
             };
         }
 
-        private static async Task ExecuteUpload(DriveService driveService, Stream stream, File file, IProgress<double> progress, CancellationToken cancellationToken)
+        private static Task ExecuteUpload(DriveService driveService, Stream stream, File file, IProgress<double> progress, CancellationToken cancellationToken)
         {
             var request = driveService.Files.Insert(file, stream, "application/octet-stream");
 
             var streamLength = stream.Length;
-            request.ProgressChanged += (uploadProgress) => progress.Report(uploadProgress.BytesSent / streamLength * 100);
+            request.ProgressChanged += (uploadProgress) => progress.Report((double)uploadProgress.BytesSent / streamLength * 100);
 
-            await request.UploadAsync(cancellationToken);
+            return request.UploadAsync(cancellationToken);
         }
 
         private async Task<File> FindFolder(string name, string parentId, DriveService driveService, CancellationToken cancellationToken)
