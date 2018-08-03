@@ -45,7 +45,7 @@ namespace MediaBrowser.Plugins.GoogleDrive
 
             try
             {
-                var resultStream = await _httpClient.Get(httpRequest);
+                var resultStream = await _httpClient.Get(httpRequest).ConfigureAwait(false);
                 return _jsonSerializer.DeserializeFromStream<T>(resultStream);
             }
             catch (HttpException ex)
@@ -66,7 +66,7 @@ namespace MediaBrowser.Plugins.GoogleDrive
 
             try
             {
-                var result = await _httpClient.Post(httpRequest);
+                var result = await _httpClient.Post(httpRequest).ConfigureAwait(false);
                 return _jsonSerializer.DeserializeFromStream<T>(result.Content);
             }
             catch (HttpException ex)

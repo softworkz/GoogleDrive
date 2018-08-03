@@ -70,7 +70,7 @@ namespace MediaBrowser.Plugins.GoogleDrive
 
             var googleCredentials = GetGoogleCredentials(target);
 
-            var file = await _googleDriveService.UploadFile(inputStream, outputPathParts, syncAccount.FolderId, googleCredentials, progress, cancellationToken);
+            var file = await _googleDriveService.UploadFile(inputStream, outputPathParts, syncAccount.FolderId, googleCredentials, progress, cancellationToken).ConfigureAwait(false);
 
             return new SyncedFileInfo
             {
@@ -107,7 +107,7 @@ namespace MediaBrowser.Plugins.GoogleDrive
 
             try
             {
-                await _googleDriveService.DeleteFile(path, googleCredentials, cancellationToken);
+                await _googleDriveService.DeleteFile(path, googleCredentials, cancellationToken).ConfigureAwait(false);
                 return true;
             }
             catch (Exception ex)
@@ -161,7 +161,7 @@ namespace MediaBrowser.Plugins.GoogleDrive
             var googleCredentials = GetGoogleCredentials(target);
             var syncAccount = _configurationRetriever.GetSyncAccount(target.Id);
 
-            var result = await _googleDriveService.GetFiles(directoryPathParts, syncAccount.FolderId, googleCredentials, cancellationToken);
+            var result = await _googleDriveService.GetFiles(directoryPathParts, syncAccount.FolderId, googleCredentials, cancellationToken).ConfigureAwait(false);
 
             return result;
         }
