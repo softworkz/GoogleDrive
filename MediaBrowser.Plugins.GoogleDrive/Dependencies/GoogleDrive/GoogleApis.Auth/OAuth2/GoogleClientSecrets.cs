@@ -29,11 +29,11 @@ namespace Google.Apis.Auth.OAuth2
     {
         /// <summary>Gets or sets the details for installed applications.</summary>
         [Newtonsoft.Json.JsonProperty("installed")]
-        private ClientSecrets Installed { get; set; }
+        private ClientSecrets Installed { get; }
 
         /// <summary>Gets or sets the details for web applications.</summary>
         [Newtonsoft.Json.JsonProperty("web")]
-        private ClientSecrets Web { get; set; }
+        private ClientSecrets Web { get; }
 
         /// <summary>Gets the client secrets which contains the client identifier and client secret. </summary>
         public ClientSecrets Secrets

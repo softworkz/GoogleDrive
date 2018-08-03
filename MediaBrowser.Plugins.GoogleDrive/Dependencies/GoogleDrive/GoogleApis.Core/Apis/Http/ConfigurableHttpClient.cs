@@ -25,7 +25,7 @@ namespace Google.Apis.Http
     public class ConfigurableHttpClient : HttpClient
     {
         /// <summary>Gets the configurable message handler.</summary>
-        public ConfigurableMessageHandler MessageHandler { get; private set; }
+        public ConfigurableMessageHandler MessageHandler { get; }
 
         /// <summary>Constructs a new HTTP client.</summary>
         public ConfigurableHttpClient(ConfigurableMessageHandler handler)

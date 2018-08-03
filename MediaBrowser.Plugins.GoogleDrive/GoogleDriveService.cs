@@ -262,7 +262,6 @@ namespace MediaBrowser.Plugins.GoogleDrive
             return result;
         }
 
-
         private async Task<List<File>> GetFiles(string query, DriveService driveService, CancellationToken cancellationToken)
         {
             var request = driveService.Files.List();

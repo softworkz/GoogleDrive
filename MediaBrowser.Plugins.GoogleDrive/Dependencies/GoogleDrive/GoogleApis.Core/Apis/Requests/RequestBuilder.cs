@@ -47,12 +47,12 @@ namespace Google.Apis.Requests
         /// will be substituted into the URI path where the path contains "{key}". See 
         /// http://tools.ietf.org/html/rfc6570 for more information.
         /// </summary>
-        private IDictionary<string, IList<string>> PathParameters { get; set; }
+        private IDictionary<string, IList<string>> PathParameters { get; }
 
         /// <summary>
         /// A dictionary containing the parameters which will apply to the query portion of this request.
         /// </summary>
-        private List<KeyValuePair<string, string>> QueryParameters { get; set; }
+        private List<KeyValuePair<string, string>> QueryParameters { get; }
 
         /// <summary>The base URI for this request (usually applies to the service itself).</summary>
         public Uri BaseUri { get; set; }

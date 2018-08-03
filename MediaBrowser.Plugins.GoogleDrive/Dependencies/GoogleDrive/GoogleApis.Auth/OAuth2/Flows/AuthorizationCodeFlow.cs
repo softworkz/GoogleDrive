@@ -56,10 +56,10 @@ namespace Google.Apis.Auth.OAuth2.Flows
             public IAccessMethod AccessMethod { get; set; }
 
             /// <summary>Gets the token server URL.</summary>
-            public string TokenServerUrl { get; private set; }
+            public string TokenServerUrl { get; }
 
             /// <summary>Gets or sets the authorization server URL.</summary>
-            public string AuthorizationServerUrl { get; private set; }
+            public string AuthorizationServerUrl { get; }
 
             /// <summary>Gets or sets the client secrets which includes the client identifier and its secret.</summary>
             public ClientSecrets ClientSecrets { get; set; }

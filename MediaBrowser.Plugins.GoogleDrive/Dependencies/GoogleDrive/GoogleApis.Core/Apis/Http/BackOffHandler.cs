@@ -36,7 +36,7 @@ namespace Google.Apis.Http
         public class Initializer
         {
             /// <summary>Gets the back-off policy used by this back-off handler.</summary>
-            public IBackOff BackOff { get; private set; }
+            public IBackOff BackOff { get; }
 
             /// <summary>
             /// Gets or sets the maximum time span to wait. If the back-off instance returns a greater time span than
@@ -81,25 +81,25 @@ namespace Google.Apis.Http
         }
 
         /// <summary>Gets the back-off policy used by this back-off handler.</summary>
-        public IBackOff BackOff { get; private set; }
+        public IBackOff BackOff { get; }
 
         /// <summary>
         /// Gets the maximum time span to wait. If the back-off instance returns a greater time span, the handle method
         /// returns <c>false</c>. Default value is 16 seconds per a retry request.
         /// </summary>
-        public TimeSpan MaxTimeSpan { get; private set; }
+        public TimeSpan MaxTimeSpan { get; }
 
         /// <summary>
         /// Gets a delegate function which indicates whether this back-off handler should handle an abnormal HTTP 
         /// response. The default is <see cref="Initializer.DefaultHandleUnsuccessfulResponseFunc"/>. 
         /// </summary>
-        public Func<HttpResponseMessage, bool> HandleUnsuccessfulResponseFunc { get; private set; }
+        public Func<HttpResponseMessage, bool> HandleUnsuccessfulResponseFunc { get; }
 
         /// <summary>
         /// Gets a delegate function which indicates whether this back-off handler should handle an exception. The 
         /// default is <see cref="Initializer.DefaultHandleExceptionFunc"/>. 
         /// </summary>
-        public Func<Exception, bool> HandleExceptionFunc { get; private set; }
+        public Func<Exception, bool> HandleExceptionFunc { get; }
 
         /// <summary>Constructs a new back-off handler with the given back-off.</summary>
         /// <param name="backOff">The back-off policy.</param>

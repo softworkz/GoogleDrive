@@ -43,10 +43,10 @@ namespace Google.Apis.Http
     public class ExponentialBackOffInitializer : IConfigurableHttpClientInitializer
     {
         /// <summary>Gets or sets the used back-off policy.</summary>
-        private ExponentialBackOffPolicy Policy { get; set; }
+        private ExponentialBackOffPolicy Policy { get; }
 
         /// <summary>Gets or sets the back-off handler creation function.</summary>
-        private Func<BackOffHandler> CreateBackOff { get; set; }
+        private Func<BackOffHandler> CreateBackOff { get; }
 
         /// <summary>
         /// Constructs a new back-off initializer with the given policy and back-off handler create function.

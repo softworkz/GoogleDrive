@@ -24,6 +24,7 @@ namespace MediaBrowser.Plugins.GoogleDrive
                 return Plugin.Instance.ConfigurationRetriever;
             }
         }
+
         private IGoogleDriveService _googleDriveService
         {
             get
@@ -31,6 +32,7 @@ namespace MediaBrowser.Plugins.GoogleDrive
                 return Plugin.Instance.GoogleDriveService;
             }
         }
+
         private readonly ILogger _logger;
         private readonly IHttpClient _httpClient;
 

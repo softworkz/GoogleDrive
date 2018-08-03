@@ -315,7 +315,7 @@ namespace Ionic.Zlib
         public CompressionStrategy Strategy
         {
             get;
-            private set;
+
         }
 
         /// <summary>

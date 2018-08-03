@@ -383,7 +383,7 @@ namespace Newtonsoft.Json.Converters
 #if !NET20
     internal class XDeclarationWrapper : XObjectWrapper, IXmlDeclaration
     {
-        internal XDeclaration Declaration { get; private set; }
+        internal XDeclaration Declaration { get; }
 
         public XDeclarationWrapper(XDeclaration declaration)
             : base(null)
