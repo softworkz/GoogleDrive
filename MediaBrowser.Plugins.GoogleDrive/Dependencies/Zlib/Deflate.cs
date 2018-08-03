@@ -71,7 +71,6 @@ using System;
 
 namespace Ionic.Zlib
 {
-
     internal enum BlockState
     {
         NeedMore = 0,       // block not completed, need more input or more output
@@ -883,6 +882,7 @@ namespace Ionic.Zlib
             last_eob_len = 8; // enough lookahead for inflate
 
             if (header)
+            {
                 unchecked
                 {
                     //put_short((short)len);
@@ -892,6 +892,7 @@ namespace Ionic.Zlib
                     pending[pendingCount++] = (byte)~len;
                     pending[pendingCount++] = (byte)(~len >> 8);
                 }
+            }
 
             put_bytes(window, buf, len);
         }
@@ -1325,7 +1326,6 @@ namespace Ionic.Zlib
                     if (match_length <= 5 && (compressionStrategy == CompressionStrategy.Filtered ||
                                               (match_length == MIN_MATCH && strstart - match_start > 4096)))
                     {
-
                         // If prev_match is also MIN_MATCH, match_start is garbage
                         // but we will ignore the current match anyway.
                         match_length = MIN_MATCH - 1;
@@ -1374,7 +1374,6 @@ namespace Ionic.Zlib
                 }
                 else if (match_available != 0)
                 {
-
                     // If there was no match at the previous position, output a
                     // single literal. If there was a match but the current match
                     // is longer, truncate the previous match to a single literal.
@@ -1464,7 +1463,9 @@ namespace Ionic.Zlib
                     window[match + best_len - 1] != scan_end1 ||
                     window[match] != window[scan] ||
                     window[++match] != window[scan + 1])
+                {
                     continue;
+                }
 
                 // The check at best_len-1 can be removed because it will be made
                 // again later. (This heuristic is not always a win.)
@@ -1874,6 +1875,5 @@ namespace Ionic.Zlib
 
             return pendingCount != 0 ? ZlibConstants.Z_OK : ZlibConstants.Z_STREAM_END;
         }
-
     }
 }

@@ -86,7 +86,9 @@ namespace Newtonsoft.Json.Converters
 
                 if ((_dateTimeStyles & DateTimeStyles.AdjustToUniversal) == DateTimeStyles.AdjustToUniversal
                     || (_dateTimeStyles & DateTimeStyles.AssumeUniversal) == DateTimeStyles.AssumeUniversal)
+                {
                     dateTime = dateTime.ToUniversalTime();
+                }
 
                 text = dateTime.ToString(_dateTimeFormat ?? DefaultDateTimeFormat, Culture);
             }
@@ -96,7 +98,9 @@ namespace Newtonsoft.Json.Converters
                 DateTimeOffset dateTimeOffset = (DateTimeOffset)value;
                 if ((_dateTimeStyles & DateTimeStyles.AdjustToUniversal) == DateTimeStyles.AdjustToUniversal
                     || (_dateTimeStyles & DateTimeStyles.AssumeUniversal) == DateTimeStyles.AssumeUniversal)
+                {
                     dateTimeOffset = dateTimeOffset.ToUniversalTime();
+                }
 
                 text = dateTimeOffset.ToString(_dateTimeFormat ?? DefaultDateTimeFormat, Culture);
             }

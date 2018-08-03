@@ -733,8 +733,6 @@ namespace Ionic.Zlib
                 return ZlibBaseStream.UncompressBuffer(compressed, decompressor);
             }
         }
-
     }
-
 }
 

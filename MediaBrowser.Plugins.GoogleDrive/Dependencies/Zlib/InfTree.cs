@@ -64,10 +64,8 @@
 using System;
 namespace Ionic.Zlib
 {
-        
         sealed class InfTree
         {
-                
                 private const int MANY = 1440;
                 
                 private const int Z_OK = 0;
@@ -158,9 +156,12 @@ namespace Ionic.Zlib
                         // Find minimum and maximum length, bound *m by those
                         l = m[0];
                         for (j = 1; j <= BMAX; j++)
-                                if (c[j] != 0)
-                                        break;
-                        k = j; // minimum code length
+            {
+                if (c[j] != 0)
+                    break;
+            }
+
+            k = j; // minimum code length
                         if (l < j)
                         {
                                 l = j;

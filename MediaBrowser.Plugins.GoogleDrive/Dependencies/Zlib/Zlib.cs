@@ -93,7 +93,6 @@ using Interop=System.Runtime.InteropServices;
 
 namespace Ionic.Zlib
 {
-
     /// <summary>
     /// Describes how to flush the current deflate operation.
     /// </summary>
@@ -376,7 +375,6 @@ namespace Ionic.Zlib
 
         // repeat a zero length 11-138 times  (7 bits of repeat count)
         internal static readonly int REPZ_11_138  = 18;
-
     }
 
     internal sealed class StaticTree
@@ -542,5 +540,4 @@ namespace Ionic.Zlib
 #pragma warning restore 3002
 
     }
-
 }

@@ -30,7 +30,6 @@ using System.IO;
 
 namespace Ionic.Zlib
 {
-
     /// <summary>
     /// Represents a Zlib stream for compression or decompression.
     /// </summary>
@@ -718,8 +717,6 @@ namespace Ionic.Zlib
                 return ZlibBaseStream.UncompressBuffer(compressed, decompressor);
             }
         }
-
     }
-
 
 }

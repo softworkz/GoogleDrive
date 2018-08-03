@@ -1024,6 +1024,5 @@ namespace Ionic.Zlib
             }
         }
 
-
     }
 }

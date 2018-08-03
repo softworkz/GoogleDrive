@@ -42,7 +42,6 @@ namespace Newtonsoft.Json.Schema
         /// <value>The line number indicating where the error occurred.</value>
         public int LineNumber { get; }
 
-
         /// <summary>
         /// Gets the line position indicating where the error occurred.
         /// </summary>

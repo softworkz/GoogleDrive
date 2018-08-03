@@ -240,11 +240,15 @@ namespace Newtonsoft.Json.Serialization
         {
             if (property.NullValueHandling.GetValueOrDefault(Serializer._nullValueHandling) == NullValueHandling.Ignore &&
                 memberValue == null)
+            {
                 return false;
+            }
 
             if (HasFlag(property.DefaultValueHandling.GetValueOrDefault(Serializer._defaultValueHandling), DefaultValueHandling.Ignore)
                 && MiscellaneousUtils.ValueEquals(memberValue, property.GetResolvedDefaultValue()))
+            {
                 return false;
+            }
 
             return true;
         }
@@ -855,7 +859,9 @@ namespace Newtonsoft.Json.Serialization
 
             if (HasFlag(Serializer._defaultValueHandling, DefaultValueHandling.Ignore) &&
                 (memberValue == null || MiscellaneousUtils.ValueEquals(memberValue, ReflectionUtils.GetDefaultValue(memberValue.GetType()))))
+            {
                 return false;
+            }
 
             return true;
         }

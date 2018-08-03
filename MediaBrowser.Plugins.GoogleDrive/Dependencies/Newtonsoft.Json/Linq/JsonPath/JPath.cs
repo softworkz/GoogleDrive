@@ -329,7 +329,6 @@ namespace Newtonsoft.Json.Linq.JsonPath
 
                     _currentIndex++;
                 }
-
             }
 
             throw new JsonException("Path ended with open indexer.");

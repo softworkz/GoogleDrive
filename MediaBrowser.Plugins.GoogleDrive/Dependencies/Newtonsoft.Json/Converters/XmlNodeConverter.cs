@@ -1572,7 +1572,6 @@ namespace Newtonsoft.Json.Converters
                             }
                             else
                             {
-                               
                                 finishedAttributes = true;
                             }
 

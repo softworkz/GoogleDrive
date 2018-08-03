@@ -214,7 +214,6 @@ namespace Ionic.Crc
                     _register = (_register >> 8) ^ crc32Table[(temp >= 0)
                                                               ? temp
                                                               : (temp + 256)];
-
                 }
             }
         }
@@ -378,7 +377,6 @@ namespace Ionic.Crc
                 if ((len2 & 1)==1)
                     crc1 = gf2_matrix_times(odd, crc1);
                 len2 >>= 1;
-
 
             } while (len2 != 0);
 
@@ -808,7 +806,5 @@ namespace Ionic.Crc
             if (!_leaveOpen)
                 _innerStream.Close();
         }
-
     }
-
 }

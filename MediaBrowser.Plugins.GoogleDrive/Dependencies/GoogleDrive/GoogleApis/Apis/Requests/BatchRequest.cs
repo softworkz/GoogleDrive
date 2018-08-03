@@ -308,7 +308,6 @@ namespace Google.Apis.Requests
                 return content;
             }*/
             return mixedContent;
-
         }
 
         /// <summary>Creates the individual server request.</summary>
