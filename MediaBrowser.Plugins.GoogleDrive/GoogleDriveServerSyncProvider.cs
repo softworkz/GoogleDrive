@@ -12,6 +12,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediaBrowser.Model.IO;
+using System.Web;
 
 namespace MediaBrowser.Plugins.GoogleDrive
 {
@@ -107,8 +108,13 @@ namespace MediaBrowser.Plugins.GoogleDrive
 
             try
             {
-                await _googleDriveService.DeleteFile(path, googleCredentials, cancellationToken).ConfigureAwait(false);
-                return true;
+                var fileId = GetFileIdFromDownloadUrl(path);
+
+                if (!string.IsNullOrWhiteSpace(fileId))
+                {
+                    await _googleDriveService.DeleteFile(fileId, googleCredentials, cancellationToken).ConfigureAwait(false);
+                    return true;
+                }
             }
             catch (Exception ex)
             {
@@ -132,6 +138,35 @@ namespace MediaBrowser.Plugins.GoogleDrive
             }).ConfigureAwait(false);
 
             //return await _googleDriveService.GetFile(file, googleCredentials, cancellationToken);
+        }
+
+         /// <summary>
+        /// Try to identify Google Drive id from the download URL.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <remarks>I'm not sure if this will work in all cases. So far it's just a 'better than nothing' approach.</remarks>
+        private string GetFileIdFromDownloadUrl(string path)
+        {
+            Uri fileUri;
+
+            if (Uri.TryCreate(path, UriKind.Absolute, out fileUri))
+            {
+                var parameters = HttpUtility.ParseQueryString(fileUri.Query);
+
+                var idValue = parameters?.Get("id");
+
+                if (!string.IsNullOrWhiteSpace(idValue))
+                {
+                    return idValue;
+                }
+
+                if (fileUri.Segments != null && fileUri.Segments.Length > 0)
+                {
+                    return fileUri.Segments.Last();
+                }
+            }
+
+            return null;
         }
 
         private SyncTarget CreateSyncTarget(GoogleDriveSyncAccount syncAccount)
