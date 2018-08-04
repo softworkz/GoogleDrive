@@ -25,7 +25,7 @@ namespace Google.Apis.Auth.OAuth2.Responses
     public class TokenResponseException : Exception
     {
         /// <summary>The error information.</summary>
-        public TokenErrorResponse Error { get; private set; }
+        public TokenErrorResponse Error { get; }
 
         /// <summary>Constructs a new token response exception from the given error.</summary>
         public TokenResponseException(TokenErrorResponse error)

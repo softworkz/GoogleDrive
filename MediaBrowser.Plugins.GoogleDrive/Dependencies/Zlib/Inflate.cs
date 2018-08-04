@@ -1216,7 +1216,6 @@ namespace Ionic.Zlib
                 }
                 do
                 {
-
                     b >>= (tp[tp_index_t_3 + 1]); k -= (tp[tp_index_t_3 + 1]);
 
                     if ((e & 16) != 0)
@@ -1242,7 +1241,6 @@ namespace Ionic.Zlib
 
                         do
                         {
-
                             b >>= (tp[tp_index_t_3 + 1]); k -= (tp[tp_index_t_3 + 1]);
 
                             if ((e & 16) != 0)
@@ -1691,7 +1689,6 @@ namespace Ionic.Zlib
 
                     default:
                         throw new ZlibException("Stream error.");
-
                 }
             }
         }

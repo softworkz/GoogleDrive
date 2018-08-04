@@ -42,7 +42,7 @@ namespace Newtonsoft.Json
         /// Gets the path to the JSON where the error occurred.
         /// </summary>
         /// <value>The path to the JSON where the error occurred.</value>
-        public string Path { get; private set; }
+        public string Path { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="JsonWriterException"/> class.

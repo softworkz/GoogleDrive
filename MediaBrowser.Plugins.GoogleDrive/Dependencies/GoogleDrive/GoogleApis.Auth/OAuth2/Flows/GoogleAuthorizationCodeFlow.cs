@@ -69,7 +69,7 @@ namespace Google.Apis.Auth.OAuth2.Flows
                 throw new TokenResponseException(error);
             }
 
-            await DeleteTokenAsync(userId, taskCancellationToken);
+            await DeleteTokenAsync(userId, taskCancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>An initializer class for Google authorization code flow. </summary>

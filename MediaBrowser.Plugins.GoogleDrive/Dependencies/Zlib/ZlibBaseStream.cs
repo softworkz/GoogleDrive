@@ -29,7 +29,6 @@ using System.IO;
 
 namespace Ionic.Zlib
 {
-
     internal enum ZlibStreamFlavor { ZLIB = 1950, DEFLATE = 1951, GZIP = 1952 }
 
     internal class ZlibBaseStream : System.IO.Stream
@@ -163,7 +162,6 @@ namespace Ionic.Zlib
                 // If GZIP and de-compress, we're done when 8 bytes remain.
                 if (_flavor == ZlibStreamFlavor.GZIP && !_wantCompress)
                     done = (_z.AvailableBytesIn == 8 && _z.AvailableBytesOut != 0);
-
             }
             while (!done);
         }
@@ -204,7 +202,6 @@ namespace Ionic.Zlib
                     // If GZIP and de-compress, we're done when 8 bytes remain.
                     if (_flavor == ZlibStreamFlavor.GZIP && !_wantCompress)
                         done = (_z.AvailableBytesIn == 8 && _z.AvailableBytesOut != 0);
-
                 }
                 while (!done);
 
@@ -272,7 +269,6 @@ namespace Ionic.Zlib
 
                         if (isize_actual != isize_expected)
                             throw new ZlibException(String.Format("Bad size in GZIP trailer. (actual({0})!=expected({1}))", isize_actual, isize_expected));
-
                     }
                     else
                     {
@@ -471,7 +467,6 @@ namespace Ionic.Zlib
                     _z.AvailableBytesIn = _stream.Read(_workingBuffer, 0, _workingBuffer.Length);
                     if (_z.AvailableBytesIn == 0)
                         nomoreinput = true;
-
                 }
                 // we have data in InputBuffer; now compress or decompress as appropriate
                 rc = (_wantCompress)
@@ -620,8 +615,6 @@ namespace Ionic.Zlib
                 return output.ToArray();
             }
         }
-
     }
-
 
 }

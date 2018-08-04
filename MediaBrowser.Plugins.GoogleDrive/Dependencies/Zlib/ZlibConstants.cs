@@ -123,6 +123,5 @@ namespace Ionic.Zlib
         /// </summary>
         public const int WorkingBufferSizeMin = 1024;
     }
-
 }
 

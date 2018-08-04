@@ -188,15 +188,15 @@ namespace Google.Apis.Services
 
         #region IClientService Members
 
-        public ConfigurableHttpClient HttpClient { get; private set; }
+        public ConfigurableHttpClient HttpClient { get; }
 
-        public IConfigurableHttpClientInitializer HttpClientInitializer { get; private set; }
+        public IConfigurableHttpClientInitializer HttpClientInitializer { get; }
 
-        public bool GZipEnabled { get; private set; }
+        public bool GZipEnabled { get; }
 
-        public string ApiKey { get; private set; }
+        public string ApiKey { get; }
 
-        public string ApplicationName { get; private set; }
+        public string ApplicationName { get; }
 
         public void SetRequestSerailizedContent(HttpRequestMessage request, object body)
         {
@@ -205,7 +205,7 @@ namespace Google.Apis.Services
 
         #region Serialization
 
-        public ISerializer Serializer { get; private set; }
+        public ISerializer Serializer { get; }
 
         public virtual string SerializeObject(object obj)
         {

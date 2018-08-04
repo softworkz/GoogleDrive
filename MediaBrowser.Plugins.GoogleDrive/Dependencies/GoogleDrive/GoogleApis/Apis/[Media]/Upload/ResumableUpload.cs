@@ -124,23 +124,23 @@ namespace Google.Apis.Upload
         #region Properties
 
         /// <summary>Gets or sets the service.</summary>
-        public IClientService Service { get; private set; }
+        public IClientService Service { get; }
 
         /// <summary>
         /// Gets or sets the path of the method (combined with
         /// <see cref="Google.Apis.Services.IClientService.BaseUri"/>) to produce 
         /// absolute Uri. 
         /// </summary>
-        public string Path { get; private set; }
+        public string Path { get; }
 
         /// <summary>Gets or sets the HTTP method of this upload (used to initialize the upload).</summary>
-        public string HttpMethod { get; private set; }
+        public string HttpMethod { get; }
 
         /// <summary>Gets or sets the stream to upload.</summary>
-        public Stream ContentStream { get; private set; }
+        public Stream ContentStream { get; }
 
         /// <summary>Gets or sets the stream's Content-Type.</summary>
-        public string ContentType { get; private set; }
+        public string ContentType { get; }
 
         /// <summary>
         /// Gets or sets the length of the steam. Will be <see cref="UnknownSize" /> if the media content length is 
@@ -213,9 +213,9 @@ namespace Google.Apis.Upload
         /// were successfully uploaded before the error occurred.
         /// See https://developers.google.com/drive/manage-uploads#resume-upload for more details.
         /// </summary>
-        class ServerErrorCallback : IHttpUnsuccessfulResponseHandler, IHttpExceptionHandler, IDisposable
+        private class ServerErrorCallback : IHttpUnsuccessfulResponseHandler, IHttpExceptionHandler, IDisposable
         {
-            private ResumableUpload<TRequest> Owner { get; set; }
+            private ResumableUpload<TRequest> Owner { get; }
 
             /// <summary>
             /// Constructs a new callback and register it as unsuccessful response handler and exception handler on the 
@@ -306,9 +306,9 @@ namespace Google.Apis.Upload
                 Exception = exception;
             }
 
-            public UploadStatus Status { get; private set; }
-            public long BytesSent { get; private set; }
-            public Exception Exception { get; private set; }
+            public UploadStatus Status { get; }
+            public long BytesSent { get; }
+            public Exception Exception { get; }
         }
 
         /// <summary>
@@ -437,7 +437,7 @@ namespace Google.Apis.Upload
             {
                 Logger.Error(ex, "MediaUpload[{0}] - Task was canceled", UploadUri);
                 UpdateProgress(new ResumableUploadProgress(ex, BytesServerReceived));
-                throw ex;
+                throw;
             }
             catch (Exception ex)
             {
@@ -468,7 +468,7 @@ namespace Google.Apis.Upload
             {
                 Logger.Error(ex, "MediaUpload[{0}] - Task was canceled", UploadUri);
                 UpdateProgress(new ResumableUploadProgress(ex, BytesServerReceived));
-                throw ex;
+                throw;
             }
             catch (Exception ex)
             {
@@ -544,11 +544,11 @@ namespace Google.Apis.Upload
             else if (response.StatusCode == (HttpStatusCode)308)
             {
                 // The upload protocol uses 308 to indicate that there is more data expected from the server.
-                IEnumerable<string> rangeValues;
+                ////IEnumerable<string> rangeValues;
 
                 var rangeHEaderValues = response.Headers
                     .Where(q => string.Equals(q.Key, "Range", StringComparison.OrdinalIgnoreCase)).Select(e => e.Value).FirstOrDefault();
-                if (rangeHEaderValues != null && rangeHEaderValues.Count() > 0)
+                if (rangeHEaderValues != null && rangeHEaderValues.Any())
                 {
                     BytesServerReceived = GetNextByte(rangeHEaderValues.First());
                     Logger.Debug("MediaUpload[{0}] - {1} Bytes were sent successfully", UploadUri, BytesServerReceived);
@@ -851,10 +851,10 @@ namespace Google.Apis.Upload
         #region Overrides
 
         /// <summary>Process the response body </summary>
-        protected override void ProcessResponse(HttpResponseMessage response)
+        protected override void ProcessResponse(HttpResponseMessage httpResponse)
         {
-            base.ProcessResponse(response);
-            ResponseBody = Service.DeserializeResponse<TResponse>(response).Result;
+            base.ProcessResponse(httpResponse);
+            ResponseBody = Service.DeserializeResponse<TResponse>(httpResponse).Result;
 
             if (ResponseReceived != null)
                 ResponseReceived(ResponseBody);

@@ -30,7 +30,6 @@ using System.Threading;
 using Ionic.Zlib;
 using System.IO;
 
-
 namespace Ionic.Zlib
 {
     internal class WorkItem
@@ -100,7 +99,6 @@ namespace Ionic.Zlib
     /// <seealso cref="Ionic.Zlib.DeflateStream" />
     public class ParallelDeflateOutputStream : System.IO.Stream
     {
-
         private static readonly int IO_BUFFER_SIZE_DEFAULT = 64 * 1024;  // 128k
         private static readonly int BufferPairsPerCore = 4;
 
@@ -307,7 +305,6 @@ namespace Ionic.Zlib
             this.MaxBufferPairs = 16; // default
         }
 
-
         /// <summary>
         ///   The ZLIB strategy to be used during compression.
         /// </summary>
@@ -315,7 +312,6 @@ namespace Ionic.Zlib
         public CompressionStrategy Strategy
         {
             get;
-            private set;
         }
 
         /// <summary>
@@ -398,8 +394,11 @@ namespace Ionic.Zlib
             set
             {
                 if (value < 4)
+                {
                     throw new ArgumentException("MaxBufferPairs",
-                                                "Value must be 4 or greater.");
+                                               "Value must be 4 or greater.");
+                }
+
                 _maxBufferPairs = value;
             }
         }
@@ -450,8 +449,11 @@ namespace Ionic.Zlib
             set
             {
                 if (value < 1024)
+                {
                     throw new ArgumentOutOfRangeException("BufferSize",
-                                                          "BufferSize must be greater than 1024 bytes");
+                                                         "BufferSize must be greater than 1024 bytes");
+                }
+
                 _bufferSize = value;
             }
         }
@@ -464,7 +466,6 @@ namespace Ionic.Zlib
         /// </remarks>
         public int Crc32 { get { return _Crc32; } }
 
-
         /// <summary>
         /// The total number of uncompressed bytes processed by the ParallelDeflateOutputStream.
         /// </summary>
@@ -472,7 +473,6 @@ namespace Ionic.Zlib
         /// This value is meaningful only after a call to Close().
         /// </remarks>
         public Int64 BytesProcessed { get { return _totalBytesProcessed; } }
-
 
         private void _InitializePoolOfWorkItems()
         {
@@ -494,9 +494,6 @@ namespace Ionic.Zlib
             _lastWritten = -1;
             _latestCompressed = -1;
         }
-
-
-
 
         /// <summary>
         ///   Write data to the stream.
@@ -553,7 +550,6 @@ namespace Ionic.Zlib
                 _InitializePoolOfWorkItems();
                 _firstWriteDone = true;
             }
-
 
             do
             {
@@ -645,8 +641,6 @@ namespace Ionic.Zlib
             return;
         }
 
-
-
         private void _FlushFinish()
         {
             // After writing a series of compressed buffers, each one closed
@@ -683,7 +677,6 @@ namespace Ionic.Zlib
             _Crc32 = _runningCrc.Crc32Result;
         }
 
-
         private void _Flush(bool lastInput)
         {
             if (_isClosed)
@@ -710,8 +703,6 @@ namespace Ionic.Zlib
             }
         }
 
-
-
         /// <summary>
         /// Flush the stream.
         /// </summary>
@@ -729,7 +720,6 @@ namespace Ionic.Zlib
 
             _Flush(false);
         }
-
 
         /// <summary>
         /// Close the stream.
@@ -763,8 +753,6 @@ namespace Ionic.Zlib
             _isClosed= true;
         }
 
-
-
         // workitem 10030 - implement a new Dispose method
 
         /// <summary>Dispose the object</summary>
@@ -786,8 +774,6 @@ namespace Ionic.Zlib
             Dispose(true);
         }
 
-
-
         /// <summary>The Dispose method</summary>
         /// <param name="disposing">
         ///   indicates whether the Dispose method was invoked by user code.
@@ -796,7 +782,6 @@ namespace Ionic.Zlib
         {
             base.Dispose(disposing);
         }
-
 
         /// <summary>
         ///   Resets the stream for use with another stream.
@@ -864,9 +849,6 @@ namespace Ionic.Zlib
             _latestCompressed = -1;
             _outStream = stream;
         }
-
-
-
 
         private void EmitPendingBuffers(bool doAll, bool mustWait)
         {
@@ -972,8 +954,6 @@ namespace Ionic.Zlib
 
             emitting = false;
         }
-
-
 
 #if OLD
         private void _PerpetualWriterMethod(object state)
@@ -1145,9 +1125,6 @@ namespace Ionic.Zlib
         }
 #endif
 
-
-
-
         private void _DeflateOne(Object wi)
         {
             // compress one buffer
@@ -1194,9 +1171,6 @@ namespace Ionic.Zlib
             }
         }
 
-
-
-
         private bool DeflateOneSegment(WorkItem workitem)
         {
             ZlibCodec compressor = workitem.compressor;
@@ -1222,7 +1196,6 @@ namespace Ionic.Zlib
             return true;
         }
 
-
         [System.Diagnostics.ConditionalAttribute("Trace")]
         private void TraceOutput(TraceBits bits, string format, params object[] varParams)
         {
@@ -1242,7 +1215,6 @@ namespace Ionic.Zlib
                 }
             }
         }
-
 
         // used only when Trace is defined
         [Flags]
@@ -1268,8 +1240,6 @@ namespace Ionic.Zlib
             All          = 0xffffffff,
         }
 
-
-
         /// <summary>
         /// Indicates whether the stream supports Seek operations.
         /// </summary>
@@ -1280,7 +1250,6 @@ namespace Ionic.Zlib
         {
             get { return false; }
         }
-
 
         /// <summary>
         /// Indicates whether the stream supports Read operations.
@@ -1378,9 +1347,7 @@ namespace Ionic.Zlib
         {
             throw new NotSupportedException();
         }
-
     }
-
 }
 
 

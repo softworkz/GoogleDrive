@@ -200,7 +200,9 @@ namespace Newtonsoft.Json.Serialization
                     return JRaw.Create(reader);
                 if (reader.TokenType == JsonToken.Null
                     && !(contract.UnderlyingType == typeof(JValue) || contract.UnderlyingType == typeof(JToken)))
+                {
                     return null;
+                }
             }
 
             JToken token;
@@ -722,7 +724,9 @@ namespace Newtonsoft.Json.Serialization
                     && objectType != typeof(IDynamicMetaObjectProvider)
 #endif
                     && !objectType.IsAssignableFrom(specifiedType))
+                {
                     throw JsonSerializationException.Create(reader, "Type specified in JSON '{0}' is not compatible with '{1}'.".FormatWith(CultureInfo.InvariantCulture, specifiedType.AssemblyQualifiedName, objectType.AssemblyQualifiedName));
+                }
 
                 objectType = specifiedType;
                 contract = GetContractSafe(specifiedType);
@@ -972,7 +976,9 @@ namespace Newtonsoft.Json.Serialization
                 && !HasFlag(property.DefaultValueHandling.GetValueOrDefault(Serializer._defaultValueHandling), DefaultValueHandling.Populate)
                 && JsonTokenUtils.IsPrimitiveToken(tokenType)
                 && MiscellaneousUtils.ValueEquals(reader.Value, property.GetResolvedDefaultValue()))
+            {
                 return true;
+            }
 
             if (currentValue == null)
             {
@@ -1017,7 +1023,9 @@ namespace Newtonsoft.Json.Serialization
             if (HasFlag(property.DefaultValueHandling.GetValueOrDefault(Serializer._defaultValueHandling), DefaultValueHandling.Ignore)
                 && !HasFlag(property.DefaultValueHandling.GetValueOrDefault(Serializer._defaultValueHandling), DefaultValueHandling.Populate)
                 && MiscellaneousUtils.ValueEquals(value, property.GetResolvedDefaultValue()))
+            {
                 return false;
+            }
 
             if (!property.Writable)
                 return false;

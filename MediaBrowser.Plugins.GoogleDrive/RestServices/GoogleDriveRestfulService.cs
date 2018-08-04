@@ -44,7 +44,7 @@ namespace MediaBrowser.Plugins.GoogleDrive.RestServices
         public async Task Post(AddSyncTarget request)
         {
             var config = _configurationRetriever.GetGeneralConfiguration();
-            var refreshToken = await GetRefreshToken(request);
+            var refreshToken = await GetRefreshToken(request).ConfigureAwait(false);
 
             var syncAccount = new GoogleDriveSyncAccount
             {
@@ -53,7 +53,7 @@ namespace MediaBrowser.Plugins.GoogleDrive.RestServices
                 EnableForEveryone = request.EnableForEveryone,
                 UserIds = request.UserIds,
                 RefreshToken = refreshToken,
-                FolderId = await GetOrCreateFolder(config.GoogleDriveClientId, config.GoogleDriveClientSecret, refreshToken)
+                FolderId = await GetOrCreateFolder(config.GoogleDriveClientId, config.GoogleDriveClientSecret, refreshToken).ConfigureAwait(false)
             };
 
             if (!string.IsNullOrEmpty(request.Id))
@@ -81,7 +81,7 @@ namespace MediaBrowser.Plugins.GoogleDrive.RestServices
             var config = _configurationRetriever.GetGeneralConfiguration();
             var redirectUri = request.RedirectUri;
 
-            var token = await _googleAuthService.GetToken(request.Code, redirectUri, config.GoogleDriveClientId, config.GoogleDriveClientSecret, CancellationToken.None);
+            var token = await _googleAuthService.GetToken(request.Code, redirectUri, config.GoogleDriveClientId, config.GoogleDriveClientSecret, CancellationToken.None).ConfigureAwait(false);
             return token.refresh_token;
         }
 
@@ -94,7 +94,7 @@ namespace MediaBrowser.Plugins.GoogleDrive.RestServices
                 RefreshToken = refreshToken
             };
 
-            return await _googleDriveService.GetOrCreateFolder(Constants.GoogleDriveFolderName, null, googleCredentials, CancellationToken.None);
+            return await _googleDriveService.GetOrCreateFolder(Constants.GoogleDriveFolderName, null, googleCredentials, CancellationToken.None).ConfigureAwait(false);
         }
     }
 }

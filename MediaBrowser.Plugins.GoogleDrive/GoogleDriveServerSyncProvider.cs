@@ -12,6 +12,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediaBrowser.Model.IO;
+using System.Web;
 
 namespace MediaBrowser.Plugins.GoogleDrive
 {
@@ -24,6 +25,7 @@ namespace MediaBrowser.Plugins.GoogleDrive
                 return Plugin.Instance.ConfigurationRetriever;
             }
         }
+
         private IGoogleDriveService _googleDriveService
         {
             get
@@ -31,6 +33,7 @@ namespace MediaBrowser.Plugins.GoogleDrive
                 return Plugin.Instance.GoogleDriveService;
             }
         }
+
         private readonly ILogger _logger;
         private readonly IHttpClient _httpClient;
 
@@ -68,7 +71,7 @@ namespace MediaBrowser.Plugins.GoogleDrive
 
             var googleCredentials = GetGoogleCredentials(target);
 
-            var file = await _googleDriveService.UploadFile(inputStream, outputPathParts, syncAccount.FolderId, googleCredentials, progress, cancellationToken);
+            var file = await _googleDriveService.UploadFile(inputStream, outputPathParts, syncAccount.FolderId, googleCredentials, progress, cancellationToken).ConfigureAwait(false);
 
             return new SyncedFileInfo
             {
@@ -99,11 +102,26 @@ namespace MediaBrowser.Plugins.GoogleDrive
             };
         }
 
-        public Task DeleteFile(string id, SyncTarget target, CancellationToken cancellationToken)
+        public async Task<bool> DeleteFile(SyncJob syncJob, string path, SyncTarget target, CancellationToken cancellationToken)
         {
             var googleCredentials = GetGoogleCredentials(target);
 
-            return _googleDriveService.DeleteFile(id, googleCredentials, cancellationToken);
+            try
+            {
+                var fileId = GetFileIdFromDownloadUrl(path);
+
+                if (!string.IsNullOrWhiteSpace(fileId))
+                {
+                    await _googleDriveService.DeleteFile(fileId, googleCredentials, cancellationToken).ConfigureAwait(false);
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.ErrorException("GoogleDriveSyncProvider: Error deleting file {0}", ex, path);
+            }
+
+            return false;
         }
 
         public async Task<Stream> GetFile(string id, SyncTarget target, IProgress<double> progress, CancellationToken cancellationToken)
@@ -120,6 +138,35 @@ namespace MediaBrowser.Plugins.GoogleDrive
             }).ConfigureAwait(false);
 
             //return await _googleDriveService.GetFile(file, googleCredentials, cancellationToken);
+        }
+
+         /// <summary>
+        /// Try to identify Google Drive id from the download URL.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <remarks>I'm not sure if this will work in all cases. So far it's just a 'better than nothing' approach.</remarks>
+        private string GetFileIdFromDownloadUrl(string path)
+        {
+            Uri fileUri;
+
+            if (Uri.TryCreate(path, UriKind.Absolute, out fileUri))
+            {
+                var parameters = HttpUtility.ParseQueryString(fileUri.Query);
+
+                var idValue = parameters?.Get("id");
+
+                if (!string.IsNullOrWhiteSpace(idValue))
+                {
+                    return idValue;
+                }
+
+                if (fileUri.Segments != null && fileUri.Segments.Length > 0)
+                {
+                    return fileUri.Segments.Last();
+                }
+            }
+
+            return null;
         }
 
         private SyncTarget CreateSyncTarget(GoogleDriveSyncAccount syncAccount)
@@ -149,7 +196,7 @@ namespace MediaBrowser.Plugins.GoogleDrive
             var googleCredentials = GetGoogleCredentials(target);
             var syncAccount = _configurationRetriever.GetSyncAccount(target.Id);
 
-            var result = await _googleDriveService.GetFiles(directoryPathParts, syncAccount.FolderId, googleCredentials, cancellationToken);
+            var result = await _googleDriveService.GetFiles(directoryPathParts, syncAccount.FolderId, googleCredentials, cancellationToken).ConfigureAwait(false);
 
             return result;
         }

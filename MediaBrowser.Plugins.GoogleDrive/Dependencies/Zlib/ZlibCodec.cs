@@ -712,6 +712,5 @@ namespace Ionic.Zlib
             TotalBytesIn += len;
             return len;
         }
-
     }
 }

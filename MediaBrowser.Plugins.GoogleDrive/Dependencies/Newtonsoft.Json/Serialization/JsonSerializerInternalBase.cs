@@ -78,11 +78,13 @@ namespace Newtonsoft.Json.Serialization
                 // override equality comparer for object key dictionary
                 // object will be modified as it deserializes and might have mutable hashcode
                 if (_mappings == null)
+                {
                     _mappings = new BidirectionalDictionary<string, object>(
-                        EqualityComparer<string>.Default,
-                        new ReferenceEqualsEqualityComparer(),
-                        "A different value already has the Id '{0}'.",
-                        "A different Id has already been assigned for value '{0}'.");
+                       EqualityComparer<string>.Default,
+                       new ReferenceEqualsEqualityComparer(),
+                       "A different value already has the Id '{0}'.",
+                       "A different Id has already been assigned for value '{0}'.");
+                }
 
                 return _mappings;
             }

@@ -769,7 +769,9 @@ namespace Newtonsoft.Json
                 // don't indent a property when it is the first token to be written (i.e. at the start)
                 if ((_currentState == State.Array || _currentState == State.ArrayStart || _currentState == State.Constructor || _currentState == State.ConstructorStart)
                     || (tokenBeingWritten == JsonToken.PropertyName && _currentState != State.Start))
+                {
                     WriteIndent();
+                }
             }
 
             _currentState = newState;

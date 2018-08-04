@@ -48,7 +48,7 @@ namespace Newtonsoft.Json.Utilities
     internal class ReflectionObject
     {
         public ObjectConstructor<object> Creator { get; private set; }
-        public IDictionary<string, ReflectionMember> Members { get; private set; }
+        public IDictionary<string, ReflectionMember> Members { get; }
 
         public ReflectionObject()
         {

@@ -31,7 +31,7 @@ namespace MediaBrowser.Plugins.GoogleDrive
                 { "grant_type", "authorization_code" }
             };
 
-            return await PostRequest<AuthorizationAccessToken>("/token", data, cancellationToken);
+            return await PostRequest<AuthorizationAccessToken>("/token", data, cancellationToken).ConfigureAwait(false);
         }
     }
 }

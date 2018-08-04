@@ -59,7 +59,7 @@ namespace MediaBrowser.Plugins.GoogleDrive
                     var parentId = await FindOrCreateParent(driveService, pathParts, rootFolderId, cancellationToken)
                                 .ConfigureAwait(false);
 
-                    result = await this.GetFilesInFolder(parentId, googleCredentials, driveService, cancellationToken);
+                    result = await this.GetFilesInFolder(parentId, googleCredentials, driveService, cancellationToken).ConfigureAwait(false);
                 }
                 catch (FileNotFoundException)
                 {
@@ -108,7 +108,7 @@ namespace MediaBrowser.Plugins.GoogleDrive
 
             foreach (var part in pathParts)
             {
-                currentparentId = await GetOrCreateFolder(part, currentparentId, driveService, cancellationToken);
+                currentparentId = await GetOrCreateFolder(part, currentparentId, driveService, cancellationToken).ConfigureAwait(false);
             }
 
             return currentparentId;
@@ -122,16 +122,16 @@ namespace MediaBrowser.Plugins.GoogleDrive
             var fullDriveService = CreateDriveServiceAndCredentials(googleCredentials);
             var driveService = fullDriveService.Item1;
 
-            var parentId = await FindOrCreateParent(driveService, pathParts, folderId, cancellationToken);
-            await TryDeleteFile(parentId, name, driveService, cancellationToken);
+            var parentId = await FindOrCreateParent(driveService, pathParts, folderId, cancellationToken).ConfigureAwait(false);
+            await TryDeleteFile(parentId, name, driveService, cancellationToken).ConfigureAwait(false);
 
             var googleDriveFile = CreateGoogleDriveFile(pathParts, name, folderId);
             googleDriveFile.GoogleDriveFolderId = parentId;
 
             var file = CreateFileToUpload(googleDriveFile);
-            await ExecuteUpload(driveService, stream, file, progress, cancellationToken);
+            await ExecuteUpload(driveService, stream, file, progress, cancellationToken).ConfigureAwait(false);
 
-            var uploadedFile = await FindFileId(name, parentId, driveService, cancellationToken);
+            var uploadedFile = await FindFileId(name, parentId, driveService, cancellationToken).ConfigureAwait(false);
             return new Tuple<string, string>(uploadedFile.Id, uploadedFile.DownloadUrl + "&access_token=" + fullDriveService.Item2.Token.AccessToken);
         }
 
@@ -152,7 +152,7 @@ namespace MediaBrowser.Plugins.GoogleDrive
             var fullDriveService = CreateDriveServiceAndCredentials(googleCredentials);
             var driveService = fullDriveService.Item1;
 
-            var uploadedFile = await GetFile(fileId, driveService, cancellationToken);
+            var uploadedFile = await GetFile(fileId, driveService, cancellationToken).ConfigureAwait(false);
             return uploadedFile.DownloadUrl + "&access_token=" + fullDriveService.Item2.Token.AccessToken;
         }
 
@@ -160,36 +160,36 @@ namespace MediaBrowser.Plugins.GoogleDrive
         {
             var driveService = CreateDriveService(googleCredentials);
 
-            var folder = await FindFolder(name, parentId, driveService, cancellationToken);
+            var folder = await FindFolder(name, parentId, driveService, cancellationToken).ConfigureAwait(false);
 
             if (folder != null)
             {
                 return folder.Id;
             }
 
-            return await CreateFolder(name, parentId, cancellationToken, driveService);
+            return await CreateFolder(name, parentId, cancellationToken, driveService).ConfigureAwait(false);
         }
 
         public async Task<string> GetOrCreateFolder(string name, string parentId, DriveService driveService, CancellationToken cancellationToken)
         {
-            var folder = await FindFolder(name, parentId, driveService, cancellationToken);
+            var folder = await FindFolder(name, parentId, driveService, cancellationToken).ConfigureAwait(false);
 
             if (folder != null)
             {
                 return folder.Id;
             }
 
-            return await CreateFolder(name, parentId, cancellationToken, driveService);
+            return await CreateFolder(name, parentId, cancellationToken, driveService).ConfigureAwait(false);
         }
 
         private async Task TryDeleteFile(string parentFolderId, string name, DriveService driveService, CancellationToken cancellationToken)
         {
             try
             {
-                var file = await FindFileId(name, parentFolderId, driveService, cancellationToken);
+                var file = await FindFileId(name, parentFolderId, driveService, cancellationToken).ConfigureAwait(false);
 
                 var request = driveService.Files.Delete(file.Id);
-                await request.ExecuteAsync(cancellationToken);
+                await request.ExecuteAsync(cancellationToken).ConfigureAwait(false);
             }
             catch (FileNotFoundException) { }
         }
@@ -199,16 +199,16 @@ namespace MediaBrowser.Plugins.GoogleDrive
             var fullDriveService = CreateDriveServiceAndCredentials(googleCredentials);
             var driveService = fullDriveService.Item1;
 
-            var file = await GetFile(fileId, driveService, cancellationToken);
+            var file = await GetFile(fileId, driveService, cancellationToken).ConfigureAwait(false);
 
             var request = driveService.Files.Delete(file.Id);
-            await request.ExecuteAsync(cancellationToken);
+            await request.ExecuteAsync(cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<File> GetFile(string fileId, DriveService driveService, CancellationToken cancellationToken)
+        public Task<File> GetFile(string fileId, DriveService driveService, CancellationToken cancellationToken)
         {
             var request = driveService.Files.Get(fileId);
-            return await request.ExecuteAsync(cancellationToken);
+            return request.ExecuteAsync(cancellationToken);
         }
 
         public async Task<File> FindFileId(string name, string parentFolderId, DriveService driveService, CancellationToken cancellationToken)
@@ -226,7 +226,7 @@ namespace MediaBrowser.Plugins.GoogleDrive
 
             query += string.Format(" and '{0}' in parents", parentFolderId);
 
-            var matchingFiles = await GetFiles(query, driveService, cancellationToken);
+            var matchingFiles = await GetFiles(query, driveService, cancellationToken).ConfigureAwait(false);
 
             var file = matchingFiles.FirstOrDefault();
 
@@ -249,7 +249,7 @@ namespace MediaBrowser.Plugins.GoogleDrive
 
             var query = string.Format("'{0}' in parents", folderId);
 
-            var matchingFiles = await GetFiles(query, driveService, cancellationToken);
+            var matchingFiles = await GetFiles(query, driveService, cancellationToken).ConfigureAwait(false);
 
             var result = new QueryResult<FileSystemMetadata>();
 
@@ -262,13 +262,12 @@ namespace MediaBrowser.Plugins.GoogleDrive
             return result;
         }
 
-
         private async Task<List<File>> GetFiles(string query, DriveService driveService, CancellationToken cancellationToken)
         {
             var request = driveService.Files.List();
             request.Q = query;
 
-            var files = await GetAllFiles(request, cancellationToken);
+            var files = await GetAllFiles(request, cancellationToken).ConfigureAwait(false);
             return files;
         }
 
@@ -278,7 +277,7 @@ namespace MediaBrowser.Plugins.GoogleDrive
 
             do
             {
-                result.AddRange(await GetFilesPage(request, cancellationToken));
+                result.AddRange(await GetFilesPage(request, cancellationToken).ConfigureAwait(false));
             } while (!string.IsNullOrEmpty(request.PageToken));
 
             return result;
@@ -286,7 +285,7 @@ namespace MediaBrowser.Plugins.GoogleDrive
 
         private static async Task<IEnumerable<File>> GetFilesPage(FilesResource.ListRequest request, CancellationToken cancellationToken)
         {
-            var files = await request.ExecuteAsync(cancellationToken);
+            var files = await request.ExecuteAsync(cancellationToken).ConfigureAwait(false);
             request.PageToken = files.NextPageToken;
             return files.Items;
         }
@@ -355,14 +354,14 @@ namespace MediaBrowser.Plugins.GoogleDrive
             };
         }
 
-        private static async Task ExecuteUpload(DriveService driveService, Stream stream, File file, IProgress<double> progress, CancellationToken cancellationToken)
+        private static Task ExecuteUpload(DriveService driveService, Stream stream, File file, IProgress<double> progress, CancellationToken cancellationToken)
         {
             var request = driveService.Files.Insert(file, stream, "application/octet-stream");
 
             var streamLength = stream.Length;
-            request.ProgressChanged += (uploadProgress) => progress.Report(uploadProgress.BytesSent / streamLength * 100);
+            request.ProgressChanged += (uploadProgress) => progress.Report((double)uploadProgress.BytesSent / streamLength * 100);
 
-            await request.UploadAsync(cancellationToken);
+            return request.UploadAsync(cancellationToken);
         }
 
         private async Task<File> FindFolder(string name, string parentId, DriveService driveService, CancellationToken cancellationToken)
@@ -374,7 +373,7 @@ namespace MediaBrowser.Plugins.GoogleDrive
             {
                 query += string.Format(" and '{0}' in parents", parentId);
             }
-            var matchingFolders = await GetFiles(query, driveService, cancellationToken);
+            var matchingFolders = await GetFiles(query, driveService, cancellationToken).ConfigureAwait(false);
 
             return matchingFolders.FirstOrDefault();
         }
@@ -384,7 +383,7 @@ namespace MediaBrowser.Plugins.GoogleDrive
             var file = CreateFolderToUpload(name, parentId);
 
             var request = driveService.Files.Insert(file);
-            var newFolder = await request.ExecuteAsync(cancellationToken);
+            var newFolder = await request.ExecuteAsync(cancellationToken).ConfigureAwait(false);
 
             return newFolder.Id;
         }

@@ -49,13 +49,13 @@ namespace Newtonsoft.Json.Serialization
         /// Gets the <see cref="Type"/> of the collection items.
         /// </summary>
         /// <value>The <see cref="Type"/> of the collection items.</value>
-        public Type CollectionItemType { get; private set; }
+        public Type CollectionItemType { get; }
 
         /// <summary>
         /// Gets a value indicating whether the collection type is a multidimensional array.
         /// </summary>
         /// <value><c>true</c> if the collection type is a multidimensional array; otherwise, <c>false</c>.</value>
-        public bool IsMultidimensionalArray { get; private set; }
+        public bool IsMultidimensionalArray { get; }
 
         private readonly Type _genericCollectionDefinitionType;
 
@@ -63,9 +63,9 @@ namespace Newtonsoft.Json.Serialization
         private ObjectConstructor<object> _genericWrapperCreator;
         private Func<object> _genericTemporaryCollectionCreator;
 
-        internal bool IsArray { get; private set; }
-        internal bool ShouldCreateWrapper { get; private set; }
-        internal bool CanDeserialize { get; private set; }
+        internal bool IsArray { get; }
+        internal bool ShouldCreateWrapper { get; }
+        internal bool CanDeserialize { get; }
 
         private readonly ConstructorInfo _parametrizedConstructor;
 
@@ -130,7 +130,9 @@ namespace Newtonsoft.Json.Serialization
 
                 if (ReflectionUtils.IsGenericDefinition(underlyingType, typeof(ICollection<>))
                     || ReflectionUtils.IsGenericDefinition(underlyingType, typeof(IList<>)))
+                {
                     CreatedType = typeof(List<>).MakeGenericType(CollectionItemType);
+                }
 
 #if !(NET20 || NET35 || PORTABLE40)
                 if (ReflectionUtils.IsGenericDefinition(underlyingType, typeof(ISet<>)))
@@ -148,7 +150,9 @@ namespace Newtonsoft.Json.Serialization
 
                 if (ReflectionUtils.IsGenericDefinition(underlyingType, typeof(IReadOnlyCollection<>))
                     || ReflectionUtils.IsGenericDefinition(underlyingType, typeof(IReadOnlyList<>)))
+                {
                     CreatedType = typeof(ReadOnlyCollection<>).MakeGenericType(CollectionItemType);
+                }
 
                 _genericCollectionDefinitionType = typeof(List<>).MakeGenericType(CollectionItemType);
                 _parametrizedConstructor = CollectionUtils.ResolveEnumerableCollectionConstructor(CreatedType, CollectionItemType);

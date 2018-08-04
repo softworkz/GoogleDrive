@@ -91,13 +91,13 @@ namespace Google.Apis.Download
             }
 
             /// <summary>Gets or sets the status of the download.</summary>
-            public DownloadStatus Status { get; private set; }
+            public DownloadStatus Status { get; }
 
             /// <summary>Gets or sets the amount of bytes that have been downloaded so far.</summary>
-            public long BytesDownloaded { get; private set; }
+            public long BytesDownloaded { get; }
 
             /// <summary>Gets or sets the exception which occurred during the download or <c>null</c>.</summary>
-            public Exception Exception { get; private set; }
+            public Exception Exception { get; }
         }
 
         /// <summary>

@@ -384,16 +384,19 @@ namespace Ionic.Zlib
             // The distribution counts are first used to generate the code values
             // without bit reversal.
             for (bits = 1; bits <= InternalConstants.MAX_BITS; bits++)
-                unchecked {
-                    next_code[bits] = code = (short) ((code + bl_count[bits - 1]) << 1);
+            {
+                unchecked
+                {
+                    next_code[bits] = code = (short)((code + bl_count[bits - 1]) << 1);
                 }
-                        
+            }
+
             // Check that the bit counts in bl_count are consistent. The last code
             // must be all ones.
             //Assert (code + bl_count[MAX_BITS]-1 == (1<<MAX_BITS)-1,
             //        "inconsistent bit counts");
             //Tracev((stderr,"\ngen_codes: max_code %d ", max_code));
-                        
+
             for (n = 0; n <= max_code; n++)
             {
                 int len = tree[n * 2 + 1];

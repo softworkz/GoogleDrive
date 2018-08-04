@@ -34,7 +34,7 @@ namespace Newtonsoft.Json.Linq.JsonPath
     internal class JPath
     {
         private readonly string _expression;
-        public List<PathFilter> Filters { get; private set; }
+        public List<PathFilter> Filters { get; }
 
         private int _currentIndex;
 
@@ -329,7 +329,6 @@ namespace Newtonsoft.Json.Linq.JsonPath
 
                     _currentIndex++;
                 }
-
             }
 
             throw new JsonException("Path ended with open indexer.");

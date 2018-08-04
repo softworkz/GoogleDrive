@@ -51,10 +51,10 @@ namespace Google.Apis.Auth.OAuth2
         public class Initializer
         {
             /// <summary>Gets the service account ID (typically an e-mail address).</summary>
-            public string Id { get; private set; }
+            public string Id { get; }
 
             /// <summary>Gets the token server URL.</summary>
-            public string TokenServerUrl { get; private set; }
+            public string TokenServerUrl { get; }
 
             /// <summary>
             /// Gets or sets the email address of the user the application is trying to impersonate in the service 

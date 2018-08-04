@@ -152,8 +152,10 @@ namespace Newtonsoft.Json
             base.Close();
 
             if (CloseOutput && _writer != null)
+            {
 #if !(NETFX_CORE || PORTABLE40 || PORTABLE)
                 _writer.Close();
+            }
 #else
                 _writer.Dispose();
 #endif
