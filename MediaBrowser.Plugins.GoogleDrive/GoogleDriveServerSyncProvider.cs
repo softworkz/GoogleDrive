@@ -13,6 +13,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediaBrowser.Model.IO;
 using System.Web;
+using MediaBrowser.Controller.Library;
 
 namespace MediaBrowser.Plugins.GoogleDrive
 {
@@ -36,11 +37,13 @@ namespace MediaBrowser.Plugins.GoogleDrive
 
         private readonly ILogger _logger;
         private readonly IHttpClient _httpClient;
+        private IUserManager _userManager;
 
-        public GoogleDriveServerSyncProvider(ILogManager logManager, IHttpClient httpClient)
+        public GoogleDriveServerSyncProvider(ILogManager logManager, IHttpClient httpClient, IUserManager userManager)
         {
             _httpClient = httpClient;
             _logger = logManager.GetLogger("GoogleDrive");
+            _userManager = userManager;
         }
 
         public string Name
@@ -58,9 +61,11 @@ namespace MediaBrowser.Plugins.GoogleDrive
             return _configurationRetriever.GetSyncAccounts().Select(CreateSyncTarget).ToList();
         }
 
-        public List<SyncTarget> GetSyncTargets(string userId)
+        public List<SyncTarget> GetSyncTargets(long userId)
         {
-            return _configurationRetriever.GetUserSyncAccounts(userId).Select(CreateSyncTarget).ToList();
+            var userIdString = _userManager.GetGuid(userId).ToString("N");
+
+            return _configurationRetriever.GetUserSyncAccounts(userIdString).Select(CreateSyncTarget).ToList();
         }
 
         public async Task<SyncedFileInfo> SendFile(SyncJob syncJob, string originalMediaPath, Stream inputStream, bool isMedia, string[] outputPathParts, SyncTarget target, IProgress<double> progress, CancellationToken cancellationToken)
