@@ -86,11 +86,6 @@ namespace MediaBrowser.Plugins.GoogleDrive
             };
         }
 
-        public string GetFullPath(IEnumerable<string> path, SyncTarget target)
-        {
-            return Path.Combine(path.ToArray());
-        }
-
         public async Task<SyncedFileInfo> GetSyncedFileInfo(string id, SyncTarget target, CancellationToken cancellationToken)
         {
             _logger.Debug("Getting synced file info for {0} from {1}", id, target.Name);
@@ -127,22 +122,6 @@ namespace MediaBrowser.Plugins.GoogleDrive
             }
 
             return false;
-        }
-
-        public async Task<Stream> GetFile(string id, SyncTarget target, IProgress<double> progress, CancellationToken cancellationToken)
-        {
-            var googleCredentials = GetGoogleCredentials(target);
-            var url = await _googleDriveService.CreateDownloadUrl(id, googleCredentials, cancellationToken).ConfigureAwait(false);
-
-            return await _httpClient.Get(new HttpRequestOptions
-            {
-                Url = url,
-                BufferContent = false,
-                CancellationToken = cancellationToken
-
-            }).ConfigureAwait(false);
-
-            //return await _googleDriveService.GetFile(file, googleCredentials, cancellationToken);
         }
 
          /// <summary>
@@ -204,14 +183,6 @@ namespace MediaBrowser.Plugins.GoogleDrive
             var result = await _googleDriveService.GetFiles(directoryPathParts, syncAccount.FolderId, googleCredentials, cancellationToken).ConfigureAwait(false);
 
             return result;
-        }
-
-        public Task<QueryResult<FileSystemMetadata>> GetFiles(SyncTarget target, CancellationToken cancellationToken)
-        {
-            var googleCredentials = GetGoogleCredentials(target);
-            var syncAccount = _configurationRetriever.GetSyncAccount(target.Id);
-
-            return _googleDriveService.GetFiles(syncAccount.FolderId, googleCredentials, cancellationToken);
         }
     }
 }
