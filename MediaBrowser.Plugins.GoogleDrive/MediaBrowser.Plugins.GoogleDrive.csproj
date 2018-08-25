@@ -5,9 +5,14 @@
     <AssemblyVersion>3.1.8.0</AssemblyVersion>
     <FileVersion>3.1.8.0</FileVersion>
     <AssemblyName>GoogleDrive</AssemblyName>
+    <Configurations>Debug;Release;DebugCopyPlugin</Configurations>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
+    <NoWarn>1701;1702;3021</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='DebugCopyPlugin|netstandard2.0|AnyCPU'">
     <NoWarn>1701;1702;3021</NoWarn>
   </PropertyGroup>
 
@@ -24,7 +29,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="mediabrowser.server.core" Version="3.6.0.13-beta" />
+    <PackageReference Include="mediabrowser.server.core" Version="3.6.0.19-beta" />
   </ItemGroup>
+
+  <Import Project="$(MSBuildProjectDirectory)\..\..\Emby.Server.NetCore\CopyPlugin.targets" Condition="Exists('$(MSBuildProjectDirectory)\..\..\Emby.Server.NetCore\CopyPlugin.targets')" />
 
 </Project>

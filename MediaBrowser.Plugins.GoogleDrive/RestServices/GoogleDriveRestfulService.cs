@@ -28,7 +28,7 @@ namespace MediaBrowser.Plugins.GoogleDrive.RestServices
                 return Plugin.Instance.GoogleAuthService;
             }
         }
-        private IGoogleDriveService _googleDriveService
+        private GoogleDriveService _googleDriveService
         {
             get
             {
@@ -85,7 +85,7 @@ namespace MediaBrowser.Plugins.GoogleDrive.RestServices
             return token.refresh_token;
         }
 
-        private async Task<string> GetOrCreateFolder(string clientId, string clientSecret, string refreshToken)
+        private Task<string> GetOrCreateFolder(string clientId, string clientSecret, string refreshToken)
         {
             var googleCredentials = new GoogleCredentials
             {
@@ -94,7 +94,7 @@ namespace MediaBrowser.Plugins.GoogleDrive.RestServices
                 RefreshToken = refreshToken
             };
 
-            return await _googleDriveService.GetOrCreateFolder(Constants.GoogleDriveFolderName, null, googleCredentials, CancellationToken.None).ConfigureAwait(false);
+            return _googleDriveService.GetChildFolder(Constants.GoogleDriveFolderName, null, googleCredentials, true, CancellationToken.None);
         }
     }
 }

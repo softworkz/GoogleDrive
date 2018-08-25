@@ -2,7 +2,6 @@
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
 using MediaBrowser.Common;
 using MediaBrowser.Common.Net;
 using MediaBrowser.Model.Serialization;
@@ -20,7 +19,7 @@ namespace MediaBrowser.Plugins.GoogleDrive
             return "https://accounts.google.com/o/oauth2/";
         }
 
-        public async Task<AuthorizationAccessToken> GetToken(string code, string redirectUri, string clientId, string clientSecret, CancellationToken cancellationToken)
+        public Task<AuthorizationAccessToken> GetToken(string code, string redirectUri, string clientId, string clientSecret, CancellationToken cancellationToken)
         {
             var data = new Dictionary<string, string>
             {
@@ -31,7 +30,7 @@ namespace MediaBrowser.Plugins.GoogleDrive
                 { "grant_type", "authorization_code" }
             };
 
-            return await PostRequest<AuthorizationAccessToken>("/token", data, cancellationToken).ConfigureAwait(false);
+            return PostRequest<AuthorizationAccessToken>("/token", data, cancellationToken);
         }
     }
 }
