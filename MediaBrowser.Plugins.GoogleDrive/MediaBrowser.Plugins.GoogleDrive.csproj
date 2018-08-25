@@ -29,10 +29,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="mediabrowser.server.core" Version="3.6.0.13-beta" />
+    <PackageReference Include="mediabrowser.server.core" Version="3.6.0.19-beta" />
   </ItemGroup>
 
-  <Import Project="$(MSBuildProjectDirectory)\..\..\Emby.Server.NetCore\CopyPlugin.targets" 
-          Condition="Exists('$(MSBuildProjectDirectory)\..\..\Emby.Server.NetCore\CopyPlugin.targets')"/>
+  <Import Project="$(MSBuildProjectDirectory)\..\..\Emby.Server.NetCore\CopyPlugin.targets" Condition="Exists('$(MSBuildProjectDirectory)\..\..\Emby.Server.NetCore\CopyPlugin.targets')" />
 
 </Project>

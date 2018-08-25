@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using MediaBrowser.Common.Configuration;
 using MediaBrowser.Common.Plugins;
 using MediaBrowser.Model.Plugins;
@@ -17,7 +16,7 @@ namespace MediaBrowser.Plugins.GoogleDrive
 
         public IConfigurationRetriever ConfigurationRetriever = new ConfigurationRetriever();
         public IGoogleAuthService GoogleAuthService;
-        public IGoogleDriveService GoogleDriveService = new GoogleDriveService();
+        public GoogleDriveService GoogleDriveService = new GoogleDriveService();
 
         public Plugin(IApplicationPaths applicationPaths, IXmlSerializer xmlSerializer, IHttpClient httpClient, IJsonSerializer jsonSerializer, IApplicationHost appHost)
             : base(applicationPaths, xmlSerializer)
