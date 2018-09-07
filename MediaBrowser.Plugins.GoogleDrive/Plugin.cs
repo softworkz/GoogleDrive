@@ -7,10 +7,12 @@ using MediaBrowser.Model.Serialization;
 using MediaBrowser.Plugins.GoogleDrive.Configuration;
 using MediaBrowser.Common.Net;
 using MediaBrowser.Common;
+using System.IO;
+using MediaBrowser.Model.Drawing;
 
 namespace MediaBrowser.Plugins.GoogleDrive
 {
-    public class Plugin : BasePlugin<PluginConfiguration>, IHasWebPages
+    public class Plugin : BasePlugin<PluginConfiguration>, IHasWebPages, IHasThumbImage
     {
         public static Plugin Instance { get; private set; }
 
@@ -51,6 +53,20 @@ namespace MediaBrowser.Plugins.GoogleDrive
         public override Guid Id
         {
             get { return _id; }
+        }
+
+        public Stream GetThumbImage()
+        {
+            var type = GetType();
+            return type.Assembly.GetManifestResourceStream(type.Namespace + ".thumb.png");
+        }
+
+        public ImageFormat ThumbImageFormat
+        {
+            get
+            {
+                return ImageFormat.Png;
+            }
         }
     }
 }
