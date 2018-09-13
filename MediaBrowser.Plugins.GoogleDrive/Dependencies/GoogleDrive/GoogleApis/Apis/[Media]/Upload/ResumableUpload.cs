@@ -660,23 +660,26 @@ namespace Google.Apis.Upload
                 stream.Position = BytesServerReceived;
             }
 
-            MemoryStream ms = new MemoryStream(chunkSize);
-            int bytesRead = 0;
-            while (true)
-            {
-                cancellationToken.ThrowIfCancellationRequested();
+            var sectionStream = new SubSectionStream(stream, stream.Position, chunkSize);
 
-                // Read from input stream and write to output stream.
-                // TODO(peleyal): write a utility similar to (.NET 4 Stream.CopyTo method).
-                int len = stream.Read(buffer, 0, (int)Math.Min(buffer.Length, chunkSize - bytesRead));
-                if (len == 0) break;
-                ms.Write(buffer, 0, len);
-                bytesRead += len;
-            }
+            ////MemoryStream ms = new MemoryStream(chunkSize);
+            ////int bytesRead = 0;
+            ////while (true)
+            ////{
+            ////    cancellationToken.ThrowIfCancellationRequested();
 
-            // Set the stream position to beginning and wrap it with stream content.
-            ms.Position = 0;
-            request.Content = new StreamContent(ms);
+            ////    // Read from input stream and write to output stream.
+            ////    // TODO(peleyal): write a utility similar to (.NET 4 Stream.CopyTo method).
+            ////    int len = stream.Read(buffer, 0, (int)Math.Min(buffer.Length, chunkSize - bytesRead));
+            ////    if (len == 0) break;
+            ////    ms.Write(buffer, 0, len);
+            ////    bytesRead += len;
+            ////}
+
+            ////// Set the stream position to beginning and wrap it with stream content.
+            ////ms.Position = 0;
+
+            request.Content = new StreamContent(sectionStream);
             request.Content.Headers.Add("Content-Range", GetContentRangeHeader(BytesServerReceived, chunkSize));
 
             LastMediaLength = chunkSize;
